@@ -13,19 +13,19 @@ public class AssetTypeService {
     public AssetTypeService(AssetTypeDataAccessService assetTypeDataAccessService) {
         this.assetTypeDataAccessService = assetTypeDataAccessService;
     }
-    List<AssetType> getAssetTypes(){
+    List<AssistTypeList> getAssetTypes(){
         return  assetTypeDataAccessService.getAssetTypes();
     }
 
-    public List<AssetType> saveAsset (AssetType asset){
-       return assetTypeDataAccessService.saveAsset(asset.getName(), asset.getAmount());
+    public List<AssistTypeList> saveAsset (int Category, AssetType asset){
+       return assetTypeDataAccessService.saveAsset(Category,asset.getName(),asset.getAmount());
 
     }
-//    public void deleteAsset(String Id){
-//        assetTypeDataAccessService.deleteAsset(Id);
-//    }
+    public void deleteAsset(String Id, int category){
+        assetTypeDataAccessService.deleteAsset(Id, category);
+    }
 
-    public AssetType findById(String id) {
-        return assetTypeDataAccessService.findById(id);
+    public AssetType findById(String id, int Category) {
+        return assetTypeDataAccessService.findById(id, Category);
     }
 }

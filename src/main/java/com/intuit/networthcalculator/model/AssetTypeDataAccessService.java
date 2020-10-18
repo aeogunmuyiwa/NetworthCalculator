@@ -18,19 +18,19 @@ public class AssetTypeDataAccessService {
         this.fakeAssetDatasource = fakeAssetDatasource;
     }
 
-    List<AssetType> getAssetTypes(){
-
-        return  fakeAssetDatasource.getAssetTypes();
+    List<AssistTypeList> getAssetTypes(){
+        return  fakeAssetDatasource.getAssistTypeList();
     }
-    public List<AssetType> saveAsset(String name , Double amount){
-       return  fakeAssetDatasource.saveAsset(name,amount);
+
+    public  List<AssistTypeList> saveAsset(int Category,String name , Double amount){
+       return  fakeAssetDatasource.saveAssets(Category,name,amount);
 
     }
-//    public void deleteAsset(String Id){
-//        fakeAssetDatasource.deleteAsset(Id);
-//    }
-    public AssetType findById(String id) {
-        return fakeAssetDatasource.findById(id);
+    public void deleteAsset(String Id, int category){
+        fakeAssetDatasource.deleteAsset(Id, category);
+    }
+    public AssetType findById(String id, int Category) {
+        return fakeAssetDatasource.findAssetbyId(id, Category);
     }
 
 }
