@@ -1,14 +1,15 @@
 package com.intuit.networthcalculator.model;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.UUID;
 
 public class AssetType {
     private UUID assesId;
     private String name;
-    private Double amount;
+    private BigDecimal amount;
 
-    public AssetType( UUID assesId, String name, Double amount) {
+    public AssetType( UUID assesId, String name, BigDecimal amount) {
         this.assesId = assesId;
         this.name = name;
         this.amount = amount;
@@ -60,11 +61,15 @@ public class AssetType {
         this.name = name;
     }
 
-    public Double getAmount() {
-        return amount;
+     public BigDecimal getAmount() {
+        if (amount != null) {
+             return amount;
+         }
+        return new BigDecimal(0.00);
+
     }
 
-    public void setAmount(Double amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 

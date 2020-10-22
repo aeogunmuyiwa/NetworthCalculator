@@ -1,4 +1,6 @@
+import {ListAssetApi} from '../APis'
 import React, { useState} from 'react';
+
 import {
     Button,
     Modal,
@@ -9,7 +11,8 @@ import {
     InputGroupAddon,
     Input,
 } from 'reactstrap';
-import PropTypes from 'prop-types';
+
+//import PropTypes from 'prop-types';
 // <Item id ='new' assetId ={assetId} modalId = {modalId}/>
 
 
@@ -18,16 +21,15 @@ import PropTypes from 'prop-types';
  *  Add a new asset / liability, or edit asset / liability
  * fetches asset from id and populates fields if user selects Edit
 * */
-let editApi ='/api/asset/'
+//let editApi ='/api/asset/'
 const ModalManger = (props) => {
     const {
         handleClose,
         show,
-        Title,
         fetchdata,
         modal
     } = props;
-
+    let Title;
 
 
     const handleOnChangeName = (event) => {
@@ -69,7 +71,7 @@ const ModalManger = (props) => {
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({name: asset.name, amount: asset.amount})
         };
-         fetch(`${editApi}/${modal.category}`, requestOptions)
+         fetch(`${ListAssetApi}/${modal.category}`, requestOptions)
             .then( response => {
                 const data =  response.json();
 
@@ -87,18 +89,18 @@ const ModalManger = (props) => {
             .catch(error => {
                 console.error('There was an error!', error);
             });
-         console.log('sucess2')
+
 
     }
-    const onEdit = async () => {
+    const onEdit =  () => {
         // POST request for adding new asset/liability to db
         const requestOptions = {
             method: 'PUT',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({name: asset.name, amount: asset.amount})
         };
-        let ComposedEditAPI = `${editApi}${asset.id}/${modal.category}`
-        await fetch(ComposedEditAPI, requestOptions)
+        let ComposedEditAPI = `${ListAssetApi}/${asset.id}/${modal.category}`
+         fetch(ComposedEditAPI, requestOptions)
             .then(async response => {
                 const data = await response.json();
 
@@ -122,6 +124,12 @@ const ModalManger = (props) => {
 
     const showHideClassName = show ? "modal display-block" : "modal display-none";
     const [asset , setAsset] = useState(modal);
+    if (modal.id === undefined){
+
+        Title = ' Add'
+    }else{
+        Title = ' Edit'
+    }
     return (
 
         <div className={showHideClassName}>
@@ -130,16 +138,25 @@ const ModalManger = (props) => {
                 <ModalBody>
                     <div>
                         <InputGroup >
-                            <Input type="text"  placeholder="Enter asset / Libility name" value = {asset.name} onChange = {handleOnChangeName}   />
+                            <Input type="text"  placeholder="Enter Asset Nme" value = {asset.name} onChange = {handleOnChangeName}  required />
                         </InputGroup>
                         <br />
-                        <InputGroup>
-                            <InputGroupAddon addonType="prepend">$</InputGroupAddon>
-                            <Input placeholder="Amount" min={0} max={1000000} type="number"  step="1" value = {asset.amount} onChange = {handleOnChangeAmount} />
-                        </InputGroup>
+                        {/*<InputGroup>*/}
+                        {/*    <InputGroupAddon addonType="prepend">$</InputGroupAddon>*/}
+                        {/*    <Input placeholder="Amount" min={0} max={1000000} type="number"  step="1" value = {asset.amount} onChange = {handleOnChangeAmount} />*/}
+                        {/*</InputGroup>*/}
+
+                        <div className="input-group mb-3">
+                            <div className="input-group-prepend">
+                                <span className="input-group-text">$</span>
+                            </div>
+                            <input  placeholder="Amount" type="number" className="form-control" aria-label="Amount (to the nearest dollar)"
+                                    min={0} max={1000000} value = {asset.amount} onChange = {handleOnChangeAmount} required/>
+                            <div className="input-group-append">
+                                <span className="input-group-text">.00</span>
+                            </div>
+                        </div>
                     </div>
-
-
                 </ModalBody>
                 <ModalFooter>
                     <Button color="primary" onClick={handleSubmit}>Add</Button>{' '}

@@ -1,9 +1,9 @@
-
 import React, {Component, useState} from "react";
 import {Button, ButtonGroup, Container, Table} from "reactstrap";
-// import Modalpopup from '../Assets/AssetModal';
+import Modalpopup from '../Assets/AssetModal';
+import Keys from '../APis';
 
-class CashAndInvestmentsList extends Component{
+class Liability extends Component{
     modal = {
         name : '',
         amount: '',
@@ -11,10 +11,18 @@ class CashAndInvestmentsList extends Component{
         category : '',
     }
 
+    APIkEYS = {
+        delete : '',
+        getList : '',
+        add: ''
+    }
 
     constructor(props) {
         super(props);
         this.state = {List: this.props.list, SelectedAsset : {}, isLoading: true, show: false,modal : this.modal, category : this.props.category};
+        if (this.state.List !== undefined ){
+            this.setState({isLoading : false})
+        }
         this.remove = this.remove.bind(this);
     }
 
@@ -25,10 +33,9 @@ class CashAndInvestmentsList extends Component{
     }
 
 
-     remove(asset) {
+    async remove(asset) {
 
-        console.log("endpoint",this.props.endpoint)
-         fetch(`${this.props.endpoint}/${asset.assesId}/${this.state.category}`, {
+        await fetch(`${Keys.ListAssetApi}${asset.assesId}/${this.state.category}`, {
             method: 'DELETE',
             headers: {
                 'Accept': 'application/json',
@@ -58,37 +65,33 @@ class CashAndInvestmentsList extends Component{
     renderBody = () => {
         const {List, isLoading} = this.state;
         if (isLoading) {
-            return;
+            return <p>Loading...</p>;
         } else {
-           return  List.map(asset => {
-               return <tr  key={asset.assesId}  >
-                   <td style={{whiteSpace: 'pre-wrap', color: 'black' ,wordWrap: 'break-word'}}>{asset.name} </td>
-                   <td style={{whiteSpace: 'pre-wrap', color: 'black',wordWrap: 'break-word'}}>${asset.amount} </td>
-                   <td>
-                       <div className="float-right">
-                           <Button size="sm" color="primary" onClick={ () => { this.setState( {SelectedAsset : asset}); this.setId(asset) }} >Edit</Button>{' '}
-                           <Button size="sm" color="danger"onClick={() => {this.setState( {SelectedAsset : asset}); this.remove(asset)}}>Delete</Button>
-
-                   </div>
-                   </td>
-               </tr>
+            return  List.map(asset => {
+                return <tr key={asset.assesId}>
+                    <td style={{whiteSpace: 'nowrap'}}>{asset.name} </td>
+                    <td>{asset.amount} </td>
+                    <td>
+                        <ButtonGroup>
+                            <Button size="sm" color="primary" onClick={ () => { this.setState( {SelectedAsset : asset}); this.setId(asset) }} >Edit</Button>
+                            <Button size="sm" color="danger"onClick={() => {this.setState( {SelectedAsset : asset}); this.remove(asset)}}>Delete</Button>
+                        </ButtonGroup>
+                    </td>
+                </tr>
             })
         }
     }
     render() {
-        //New {this.props.Title}
         return (
             <div>
                 <Container fluid>
                     <div className="float-right">
-                        <Button color="success" onClick={ () => {  this.setId({}) }}>Add</Button>
+                        <Button color="success" onClick={ () => {  this.setId({}) }}>Add New {this.props.Title}</Button>
                     </div>
-                    <this.props.Modalpopup show={this.state.show} handleClose={this.hideModal}  Title ={'Edit Asset'} modal = {this.state.modal}  data = {this.state.SelectedAsset} fetchdata = {this.props.fetchdata}>
-                    </this.props.Modalpopup>
-
+                    <Modalpopup show={this.state.show} handleClose={this.hideModal}  Title ={'Edit Asset'} modal = {this.state.modal}  data = {this.state.SelectedAsset} fetchdata = {this.props.fetchdata}>
+                    </Modalpopup>
                     <h5> {this.props.Title}</h5>
-
-                    <Table  striped bordered hover size="sm" className="mt-4" style={{tableLayout : 'fixed', width: '100%'}}>
+                    <Table  striped bordered hover size="sm" className="mt-4">
                         <tbody>
                         {this.renderBody()}
                         </tbody>
@@ -101,4 +104,4 @@ class CashAndInvestmentsList extends Component{
     }
 
 }
-export default CashAndInvestmentsList;
+export default Liability;

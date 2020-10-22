@@ -1,18 +1,20 @@
 import React, {Component} from "react";
 import {Button, Container, Table} from 'reactstrap';
-import AddItem from "./AssetModal";
-import Modalpopup from './AssetModal'
-import  CashAndInvestmentsList from '../main/CashAndInvestmentsList'
-import {ListAssetApi,GetNetworth} from "../APis";
+import AddItem from "./LiabilityModal";
+import ModalManger from './LiabilityModal'
+import CashAndInvestmentsList from "../main/CashAndInvestmentsList";
+import {GetNetworth, ListLiabilityApi} from "../APis";
+
+
 /**
  * section to show asset name , amount , edit and delete functionality
  * */
 
 
-class AssetsMain extends Component{
+class LiabilityMain extends Component{
     constructor(props) {
         super(props);
-        this.state = { show: false, List : [],isLoading: true , Total : ''}
+        this.state = { show: false, List : [],isLoading: true, Total : ''}
     }
     Assetmodal = {
         name : '',
@@ -21,14 +23,13 @@ class AssetsMain extends Component{
     }
     componentDidMount() {
         this.setState({isLoading: true});
-        fetch(ListAssetApi)
+        fetch(ListLiabilityApi)
             .then(response => response.json())
             .then(data => this.setState({List: data, isLoading: false}))
-
         fetch(GetNetworth)
             .then(response => response.json())
             .then(
-                data => this.setState({Total : data.networth[0].sum})
+                data => this.setState({Total : data.networth[1].sum})
             )
     }
 
@@ -47,17 +48,17 @@ class AssetsMain extends Component{
         return (
             <div>
                 <Container fluid>
-                    <AddItem show={this.state.show} handleClose={this.hideModal} assetId = {''} modalId = {'New'}  modal = {this.Assetmodal}>
+                    <AddItem show={this.state.show} handleClose={this.hideModal} assetId = {''} modalId = {'New'} Liability = "Add a new asset" modal = {this.Assetmodal} >
                     </AddItem>
-
-                    <h5> Asset </h5>
+                    <h5> Liability
+                    </h5>
                     <Table  striped bordered hover size="sm" className="mt-4" dark>
                         <tbody>
                         {this.renderBody()}
                         </tbody>
-                        <Container fluid>
-                                <div style={{whiteSpace: 'pre-wrap', color: 'white' ,wordWrap: 'break-word'}} className="float-right">${this.state.Total} </div>
-                                <h5 > Total Assets</h5>
+                        <Container fluid >
+                            <div   style={{whiteSpace: 'pre-wrap', color: 'white' ,wordWrap: 'break-word'}} className="float-right">${this.state.Total} </div>
+                            <h5 > Total Liabilities</h5>
                         </Container>
                     </Table>
                 </Container>
@@ -66,22 +67,24 @@ class AssetsMain extends Component{
         )
     }
     renderBody = () => {
-        const {List, isLoading, Total} = this.state;
+        const {List, isLoading} = this.state;
         if (isLoading) {
-            return;
+            return ;
         }else{
+
             return List.map((list , index) => {
                 return <tr key={list.assetTypeName}>
-                    <td >
-                        <CashAndInvestmentsList  Title = {list.assetTypeName} list = {list.assetTypeList} category = {index} fetchdata = {this.fetchdata} Modalpopup = {Modalpopup} endpoint = {ListAssetApi}/>
+                    <td>
+                        <CashAndInvestmentsList Title = {list.assetTypeName} list = {list.assetTypeList} category = {index} fetchdata = {this.fetchdata} Modalpopup ={ModalManger} endpoint = {ListLiabilityApi}/>
                     </td>
                 </tr>
-            })
 
+
+            })
         }
 
     }
-
+    
 
 }
-export default AssetsMain;
+export default LiabilityMain;

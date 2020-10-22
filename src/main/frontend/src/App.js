@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import './App.css';
-import Assets from './Assets/Homepage';
+import Assets from './Homepage';
 
 
 class App extends  Component{

@@ -1,17 +1,35 @@
 package com.intuit.networthcalculator.model;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class AssistTypeList {
-    public AssistTypeList(String assetTypeName, List<AssetType> assetTypeList) {
+    public AssistTypeList(String assetTypeName, List<AssetType> assetTypeList, NetworthType networthType) {
         AssetTypeName = assetTypeName;
         AssetTypeList = assetTypeList;
-        this.sum = getSum();
+        this.networthType = networthType;
+        if (this.getSum() == null) {
+            this.sum = new BigDecimal(0.00);
+        }else{
+            this.sum = this.getSum() ;
+        }
+
     }
 
+    public NetworthType getNetworthType() {
+        return networthType;
+    }
+
+    public void setNetworthType(NetworthType networthType) {
+        this.networthType = networthType;
+    }
+
+
+
+    private NetworthType networthType;
     private  String AssetTypeName;
     private List<AssetType> AssetTypeList;
-    private Double sum;
+    private BigDecimal sum;
     public String getAssetTypeName() {
         return AssetTypeName;
     }
@@ -28,19 +46,27 @@ public class AssistTypeList {
         AssetTypeList = assetTypeList;
     }
 
-    public Double getSum() {
+    public BigDecimal getSum() {
         var item = 0;
-        Double sum = 0.0;
+        BigDecimal sum = new BigDecimal(0.00);
         for (AssetType element : getAssetTypeList()){
-            sum += element.getAmount();
-
+            sum = sum.add(element.getAmount());
+           // sum += element.getAmount();
         }
         return sum;
     }
 
-    public void setSum(Double sum) {
+    public void setSum(BigDecimal sum) {
         this.sum = sum;
     }
-
+    @Override
+    public String toString() {
+        return "AssistTypeList{" +
+                "networthType=" + networthType +
+                ", AssetTypeName='" + AssetTypeName + '\'' +
+                ", AssetTypeList=" + AssetTypeList +
+                ", sum=" + sum +
+                '}';
+    }
 
 }
